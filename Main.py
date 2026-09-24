@@ -2,8 +2,7 @@ from flask import Flask, render_template_string, request, session, redirect, url
 import random
 
 app = Flask(__name__)
-app.secret_key = "shop-economy-dev-secret"  # для продакшена замени на случайный ключ из переменных окружения
-
+app.secret_key = "shop-economy-dev-secret"
 MAX_DAYS = 30
 
 # =========================
