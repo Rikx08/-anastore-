@@ -2,7 +2,8 @@ from flask import Flask, render_template_string, request, session, redirect, url
 import random
 
 app = Flask(__name__)
-app.secret_key = "shop-economy-dev-secret"
+app.secret_key = "shop-economy-dev-secret"  # для продакшена замени на случайный ключ из переменных окружения
+
 MAX_DAYS = 30
 
 # =========================
@@ -564,7 +565,7 @@ body {
     background: #202225;
     color: white;
     font-family: Arial;
-    max-width: 900px;
+    max-width: 1300px;
     margin: auto;
     padding: 40px;
 }
@@ -611,13 +612,23 @@ button:hover { background: #4752c4; }
 
 .day-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: 3fr 2fr;
+    gap: 25px;
     align-items: start;
 }
 .day-layout .result-col {
     position: sticky;
     top: 20px;
+}
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+@media (max-width: 900px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
 }
 @media (max-width: 720px) {
     .day-layout {
@@ -681,19 +692,23 @@ TEMPLATE = """
 
     {% if game.level == 'hard' %}
 
+        <div class="products-grid">
         {% for pid, p in game.products.items() %}
         <div class="product-block">
             <h3>{{ p.name }}</h3>
-            <p>Себестоимость: {{ "{:,.0f}".format(p.cost) }} ₽ &nbsp;|&nbsp;
-               Цена конкурента: {{ "{:,.0f}".format(p.competitor_price) }} ₽ &nbsp;|&nbsp;
+            <p>Себестоимость: {{ "{:,.0f}".format(p.cost) }} ₽<br>
+               Цена конкурента: {{ "{:,.0f}".format(p.competitor_price) }} ₽<br>
                Склад: {{ p.stock }} шт.</p>
             <label>Цена:</label>
             <input type="number" name="price_{{ pid }}" value="{{ p.competitor_price }}" min="1" step="1" required>
+            <br>
             <label>Закупка:</label>
             <input type="number" name="purchase_{{ pid }}" value="30" min="0" step="1" required>
         </div>
         {% endfor %}
+        </div>
 
+        <br>
         <label>Общий бюджет на рекламу:</label>
         <input type="number" name="advertising" value="2000" min="0" step="1">
         <br>
